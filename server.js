@@ -169,7 +169,7 @@ initDb(function(err){
 });
 
 app.listen(port, ip);
+console.log(JSON.stringify(process.env));
 console.log('Server running on http://%s:%s', ip, port);
 console.log('Mongo server running on %s', mongoURL);
-console.log(JSON.stringify(process.env));
 module.exports = app ;
