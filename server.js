@@ -17,14 +17,14 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({extended: true}))
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.RIZKIPORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || process.env.RIZKIIP || 'localhost',
+    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || process.env.RIZKIIP || '0.0.0.0',
     mongoHost =  '127.0.0.1',
     mongoPort =  27017,
     mongoDatabase = 'user',
     mongoUser, mongoPassword,
     mongoURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    if(process.env.OPENSHIFT_MONGODB_DB_URL){
-       mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL + db_name;
+    if(process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL){
+       mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
       } else if (process.env.DATABASE_SERVICE_NAME) {
       var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
           mongoHost = process.env[mongoServiceName + '_SERVICE_HOST']
@@ -171,5 +171,5 @@ initDb(function(err){
 app.listen(port, ip);
 console.log('Server running on http://%s:%s', ip, port);
 console.log('Mongo server running on %s', mongoURL);
-
+console.log(JSON.stringify(process.env));
 module.exports = app ;
