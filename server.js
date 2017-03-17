@@ -22,7 +22,8 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.
     mongoPort =  27017,
     mongoDatabase = 'user',
     mongoUser, mongoPassword,
-    mongoURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDatabase;
+    mongoURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDatabase,
+    mongoURLLabel = "";
     if(process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL){
        mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
       } else if (process.env.DATABASE_SERVICE_NAME) {
@@ -34,14 +35,15 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.
           mongoUser = process.env[mongoServiceName + '_USER'];
 
       if (mongoHost && mongoPort && mongoDatabase) {
-          mongoURL = 'mongodb://';
+         mongoURLLabel = mongoURL = 'mongodb://';
         if (mongoUser && mongoPassword) {
           mongoURL += mongoUser + ':' + mongoPassword + '@';
         }
           mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
+          mongoURLLabel += mongoURLLabel + ':' +  mongoPort + '/' + mongoDatabase;
       }
     }
-var db = null;
+var db = null, dbDetails = {};
 
 var initDb = function(callback) {
   if (mongoURL == null) return;
